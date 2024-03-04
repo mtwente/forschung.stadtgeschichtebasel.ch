@@ -32,19 +32,19 @@
                 </a>
             </p>
             {% endif %}
-            <p class="text-white text-md-end" id="footer-credits">
-                <small><em>{{ site.data.translations['_includes']['footer.html']['built-with'][site.lang] | default: 'built with' }}</em>
-                    <a href="https://collectionbuilder.github.io/" target="_blank" rel="noopener" title="CollectionBuilder">
-                        <img src="{{ '/assets/img/collectionbuilder-logo.png' | relative_url }}" class="img-fluid" alt="CollectionBuilder" >
-                    </a>
-                </small>
-            </p>
 
         </div>
 
     </div>
 
     <div class="col-md-12 text-center pt-3 pb-1">
+        <p class="text-white" id="footer-credits">
+            <small><em>{{ site.data.translations['_includes']['footer.html']['built-with'][site.lang] | default: 'built with' }}</em>
+                <a href="https://collectionbuilder.github.io/" target="_blank" rel="noopener" title="CollectionBuilder">
+                    <img src="{{ '/assets/img/collectionbuilder-logo.png' | relative_url }}" class="img-fluid" alt="CollectionBuilder" >
+                </a>
+            </small>
+        </p>
         <p class="text-white">{{ site.data.translations['_includes']['footer.html']['last-updated'][site.lang] | default: 'Last updated' }} {{ site.time | date: '%Y' }}</p>
     </div>
 
