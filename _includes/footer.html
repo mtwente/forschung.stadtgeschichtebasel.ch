@@ -27,9 +27,7 @@
         <div class="col-md-5 mt-3 text-center">
 
            {% if site.organization-logo-nav %} <p class="text-md-end">
-                <a href="{{ site.organization-link }}" target="_blank" rel="noopener">
-                    <img id="footer-logo" class="img-fluid" src="{{ site.organization-logo-nav | relative_url }}" alt="{{ site.organization-name | escape }} home">
-                </a>
+                
             </p>
             {% endif %}
 
@@ -38,10 +36,13 @@
     </div>
 
     <div class="col-md-12 text-center pt-3 pb-1">
-        <p class="text-white" id="footer-credits">
+        <p class="text-white fw-bold" id="footer-credits">
+            <a href="{{ site.organization-link }}" target="_blank" rel="noopener">
+                <img id="footer-logo" class="img-fluid" src="{{ site.organization-logo-nav | relative_url }}" alt="{{ site.organization-name | escape }} home">
+            </a> &#x2E31;
             <small><em>{{ site.data.translations['_includes']['footer.html']['built-with'][site.lang] | default: 'built with' }}</em>
                 <a href="https://collectionbuilder.github.io/" target="_blank" rel="noopener" title="CollectionBuilder">
-                    <img src="{{ '/assets/img/collectionbuilder-logo.png' | relative_url }}" class="img-fluid" alt="CollectionBuilder" >
+                    <img src="{{ '/assets/img/collectionbuilder-logo.png' | relative_url }}" class="img-fluid mx-1" alt="CollectionBuilder" >
                 </a>
             </small>
         </p>
