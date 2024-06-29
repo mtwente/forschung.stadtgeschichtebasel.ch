@@ -1,0 +1,20 @@
+{% assign items = site.data[site.metadata] | where_exp: 'item', 'item.objectid and item.parentid == nil' %}
+{% assign random_items = items | sample: 3 %}
+
+<div class="row">
+    {% for item in random_items %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if item.image_url %}
+                    <img src="{{ item.image_url }}" class="card-img-top" alt="{{ item.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.title }}</h5>
+                    <a href="{{ item.url | relative_url }}" class="btn btn-outline-primary">{{ site.data.translations['_layouts']['browse.html']['view-item'][site.lang] | default: 'View Item' }}</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="row" id="browseItems"></div>

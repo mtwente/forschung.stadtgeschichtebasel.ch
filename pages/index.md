@@ -19,4 +19,4 @@ Diese öffentlich zugängliche Plattform dient der Bereitstellung von Quellen un
 
 Da die Plattform noch im Testbetrieb ist, werden kontinuierlich weitere Daten hinzugefügt, bis das Projekt Ende 2025 abgeschlossen wird. Wir laden Sie ein, die Plattform regelmässig zu besuchen, um die neuesten Updates zu entdecken, und ermutigen Sie, Fehler oder Unstimmigkeiten zu melden. Die Daten wurden auf der Gundlage des [Handbuchs zur Erstellung diskriminierungsfreier Metadaten für historische Quellen und Forschungsdaten](https://maehr.github.io/diskriminierungsfreie-metadaten/) erstellt.
 
-{% include index/carousel.html title="Daten aus der Sammlung" %}
+{% include index/random-cards.html title="Daten aus der Sammlung" %}
