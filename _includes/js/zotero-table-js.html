@@ -46,13 +46,13 @@ $(document).ready(function() {
                     { data: 'author', title: 'Author' },
                     { data: 'date', title: 'Date' },
                     { data: 'entryType', title: 'Type' },
-                    {
-                        data: 'entryKey',
-                        title: 'Link',
-                        render: function(data) {
-                            return `<a href="https://doi.org/${data}" target="_blank">View</a>`;
-                        }
-                    }
+                    //{
+                    //    data: 'entryKey',
+                    //    title: 'Link',
+                    //    render: function(data) {
+                    //        return `<a href="https://doi.org/${data}" target="_blank">View</a>`;
+                    //    }
+                    //}
                 ],
                 paging: true,
                 lengthMenu: [[25, 50, 100, -1], [25, 50, 100, "∞"]],
