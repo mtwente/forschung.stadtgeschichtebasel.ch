@@ -140,6 +140,16 @@ a {
     color: #ffe880 !important;
 }
 
+.dropdown-toggle-split {
+    background-color: transparent; /* Change to your desired background color */
+    border: none;
+  }
+    
+  .navbar-nav .btn-group > .dropdown-toggle-split:hover,
+  .navbar-nav .btn-group > .dropdown-toggle-split:focus {
+    color: white;
+  }
+
 .btn-group .dropdown-toggle:not(:last-child) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
