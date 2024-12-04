@@ -1,6 +1,6 @@
 ---
 title: Forschungsdaten
-layout: data
+layout: page
 permalink: /data.html
 ---
 

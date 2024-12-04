@@ -191,6 +191,22 @@ a {
     border: none; /* for inner cell borders */
 }
 
+.dtsb-titleRow {
+    display: none;
+}
+
+.dtsb-searchBuilder {
+    align-items: center;
+}
+
+.dtsb-logicContainer {
+    flex-wrap: nowrap !important;
+}
+
+.dtb-popover-close {
+    display: none;
+}
+
 #wrap {
     max-height: 600px; 
     overflow-y: auto;

@@ -1,5 +1,11 @@
 {% assign fcount = site.data['config-table'] | size %}
 {% assign lang = site.lang %}
+{% assign quick_search = site.data.translations._includes.js['table-js.html'].quick_search[site.lang]
+  | default: 'Quick Search'
+%}
+{% assign advanced_search = site.data.translations._includes.js['table-js.html'].advanced_search[site.lang]
+  | default: 'Advanced Search'
+%}
 {% assign download_dropdown = site.data.translations._includes.js['table-js.html'].download[site.lang]
   | default: 'Download'
 %}
@@ -23,21 +29,48 @@
   /* customise export button styling */
   $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn-outline-primary';
 
+  //DataTable.datetime('yyyy');
+
   /* use jquery to initialize DataTables and load collection data */
   $(document).ready( function () {
       $('#item-table').DataTable( {
-          {% if lang != "en" %}language: { url: '{{ "/assets/lib/datatables/" | append: lang | append: ".json" | relative_url }}' },{% endif %}
+          {% if lang != "en" %}language: { url: '{{ "/assets/lib/datatables/" | append: lang | append: ".json" | relative_url }}',
+            search: "",
+            searchBuilder:{ button: '{{ advanced_search }}'},
+          },{% endif %}
           // use DataTables ajax load
           ajax: { url: '{{ "/assets/js/metadata.min.json" | relative_url }}', dataSrc: 'objects' },
           // defer render to speed up large sets
           "deferRender": true,
           // enable pagination
           "paging": true,
+          fixedHeader: true,
           "lengthMenu": [[ 25, 50, 100, -1], [ 25, 50, 100, "∞"]],
-          // add download features
-          dom: 'B<"d-flex justify-content-between align-items-center flex-nowrap mt-2"<"pagination-controls"l><"search-box"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
-          buttons: [
+          layout: {
+            topStart: [
               {
+                search: {
+                text: '_INPUT_',
+                placeholder: '{{ quick_search }}',
+                },
+              },
+              {
+                buttons: [
+                {
+                  extend: 'searchBuilder',
+                  className: 'btn btn-outline-primary'
+                },
+                ],
+              }
+            ],
+            topEnd: {
+              buttons: [
+                {
+                  extend: 'colvis',
+                  columns: 'th:nth-child(n+2)',
+                  className: 'btn btn-outline-primary'
+                },
+                {
                   extend: 'collection',
                   text: '{{ download_dropdown }}',
                   className: 'btn btn-outline-primary',
@@ -61,7 +94,11 @@
                       },
                   className: 'btn btn-outline-primary'
                }
-          ],
+              ],
+              },
+          },
+          // add download features
+          //dom: 'B<"d-flex justify-content-between align-items-center flex-nowrap mt-2"<"pagination-controls"l><"search-box"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
           // get the data from json
           columns: [ {% for i in (0..fcount) %}{ data: '{{ i }}' }{% unless forloop.last %},{% endunless %}{% endfor %} ],
           columnDefs: [
@@ -73,7 +110,11 @@
               { "visible": false,  "targets": [ {{ fcount }} ] }
           ],
           // sort based on the second column
-          order: [[ 1, "asc" ]]
+          order: [[ 1, "asc" ]],
+          initComplete: function () {
+            // Hide the SearchBuilder container initially
+            $('.dtsb-searchBuilder').hide();
+          }
       });
   });
 </script>
