@@ -29,8 +29,6 @@
   /* customise export button styling */
   $.fn.dataTable.Buttons.defaults.dom.button.className = 'btn-outline-primary';
 
-  //DataTable.datetime('yyyy');
-
   /* use jquery to initialize DataTables and load collection data */
   $(document).ready( function () {
       $('#item-table').DataTable( {
@@ -45,7 +43,8 @@
           // enable pagination
           "paging": true,
           fixedHeader: true,
-          "lengthMenu": [[ 25, 50, 100, -1], [ 25, 50, 100, "∞"]],
+          // "lengthMenu": [[ 25, 50, 100, -1], [ 25, 50, 100, "∞"]],
+          autoWidth: false,
           layout: {
             topStart: [
               {
@@ -60,16 +59,16 @@
                   extend: 'searchBuilder',
                   className: 'btn btn-outline-primary'
                 },
+                {
+                  extend: 'colvis',
+                  columns: ':gt(0)',
+                  className: 'btn btn-outline-primary'
+                },
                 ],
               }
             ],
             topEnd: {
               buttons: [
-                {
-                  extend: 'colvis',
-                  columns: 'th:nth-child(n+2)',
-                  className: 'btn btn-outline-primary'
-                },
                 {
                   extend: 'collection',
                   text: '{{ download_dropdown }}',
@@ -78,12 +77,20 @@
                       {
                           text: '{{ excel_export }}',
                           extend: 'excelHtml5',
-                          className: 'btn btn-outline-primary'
+                          className: 'btn btn-outline-primary',
+                          exportOptions: {
+                          columns: ':visible',
+                          orthogonal: 'export'
+                          }
                       },
                       {
                           text: '{{ csv_export }}',
                           extend: 'csvHtml5',
-                          className: 'btn btn-outline-primary'
+                          className: 'btn btn-outline-primary',
+                          exportOptions: {
+                          columns: ':visible',
+                          orthogonal: 'export'
+                          }
                       }
                   ]
               },
@@ -97,8 +104,6 @@
               ],
               },
           },
-          // add download features
-          //dom: 'B<"d-flex justify-content-between align-items-center flex-nowrap mt-2"<"pagination-controls"l><"search-box"f>>t<"row"<"col-md-6"i><"col-md-6"p>>',
           // get the data from json
           columns: [ {% for i in (0..fcount) %}{ data: '{{ i }}' }{% unless forloop.last %},{% endunless %}{% endfor %} ],
           columnDefs: [
@@ -107,13 +112,59 @@
               // combine link with first column
               { "render": function ( data, type, row ) { return '<a href="' + row['{{ fcount }}'] +'">'+ data +'</a>'; },"targets": 0 },
               // hide the link column
-              { "visible": false,  "targets": [ {{ fcount }} ] }
+              { "visible": false,  "targets": [ {{ fcount }} ] },
+              // define certains columns to be hidden by default for better appearance
+              { "visible": false, "targets": [5,6,7,9,10,11,12,13] },
+              // handle keywords and eras: display as HTML, export raw text
+              {
+                "targets": [3,4], // Keyword and Era column IDs
+                "render": function (data, type, row) {
+                    if (!data) return '';
+                    
+                    const keywords = data.split(';').map(keyword => keyword.trim());
+                    
+                    const links = keywords.map(keyword => {
+                        const url = `/browse.html#${encodeURIComponent(keyword)}`;
+                        if (type === 'display') {
+                            return `<a href="${url}" target="_blank">${keyword}</a>`;
+                        } else if (type === 'export') {
+                            return keyword;
+                        }
+                    });
+                    return links.join(', ');
+                }
+              },
+              // handle markdown links: display as HTML, export raw markdown
+              {
+                "targets": [5,7,8,9,10], // columns with markdown links
+                "render": function (data, type, row) {
+                    if (!data) return '';
+
+                    const links = data.split(';').map(link => {
+                        const match = link.match(/\[(.+?)\]\((.+?)\)/);
+                        if (match) {
+                            const label = match[1]; // link label
+                            const url = match[2]; // link URL
+
+                            if (type === 'display') {
+                                return `<a href="${url}" target="_blank">${label}</a>`;
+                            } else if (type === 'export') {
+                                return `[${label}](${url})`;
+                            }
+                        }
+                        return link;
+                    });
+                    return type === 'display' ? links.join('<hr>') : links.join(';');
+                  }
+                }
           ],
           // sort based on the second column
           order: [[ 1, "asc" ]],
           initComplete: function () {
-            // Hide the SearchBuilder container initially
+            // hide the SearchBuilder container initially
             $('.dtsb-searchBuilder').hide();
+            // align size of quick search bar
+            $('#dt-search-0').removeClass('form-control-sm').addClass('form-control-md');
           }
       });
   });
