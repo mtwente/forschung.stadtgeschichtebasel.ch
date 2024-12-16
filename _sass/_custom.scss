@@ -110,6 +110,7 @@ a {
 }
 
 #dt-search-0 {
+    margin-left: 0;
     border-color: #3a1e3e;
     &:focus {
         border-width: 1px;
@@ -189,6 +190,10 @@ a {
     background-color: #3a1e3e;
 }
 
+.table>thead {
+    vertical-align: middle;
+}
+
 .datatable-border {
     border-color: #ffe880 !important;
     border-width: 6.5px !important;
@@ -210,6 +215,13 @@ a {
 
 .dtsb-logicContainer {
     flex-wrap: nowrap !important;
+}
+
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-data, 
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-condition,
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-value,
+div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
+    border-color: #3a1e3e;
 }
 
 .dtb-popover-close {
