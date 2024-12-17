@@ -115,25 +115,26 @@
               { "render": function ( data, type, row ) { return '<a href="' + row['{{ fcount }}'] +'">'+ data +'</a>'; },"targets": 0 },
               // hide the link column
               { "visible": false,  "targets": [ {{ fcount }} ] },
-                            // define certain columns to be hidden by default for better appearance
-                            { "visible": false, "targets": [5,6,7,9,10,11,12,13] },
+              // define certain columns to be hidden by default for better appearance
+              { "visible": false, "targets": [5,6,7,9,10,11,12,13] },
               // handle keywords and eras: display as HTML, export raw text
               {
-                "targets": [3,4], // Keyword and Era column IDs
+                "targets": [3,4], // keyword and era column IDs
                 "render": function (data, type, row) {
-                    if (!data) return '';
+                  if (!data) return '';
 
-                    const keywords = data.split(';').map(keyword => keyword.trim());
+                  const keywords = data.split(';').map(keyword => keyword.trim());
 
+                  if (type === 'display') {
                     const links = keywords.map(keyword => {
-                        const url = `/browse.html#${encodeURIComponent(keyword)}`;
-                        if (type === 'display') {
-                            return `<a href="${url}" target="_blank">${keyword}</a>`;
-                        } else if (type === 'export') {
-                            return keyword;
-                        }
+                      const url = `/browse.html#${encodeURIComponent(keyword)}`;
+                      return `<a href="${url}" target="_blank">${keyword}</a>`;
                     });
                     return links.join(', ');
+                  } else if (type === 'export') {
+                    return keywords.join(';');
+                  }
+                  return data;
                 }
               },
               // handle markdown links: display as HTML, export raw markdown
@@ -145,8 +146,8 @@
                     const links = data.split(';').map(link => {
                         const match = link.match(/\[(.+?)\]\((.+?)\)/);
                         if (match) {
-                            const label = match[1]; // link label
-                            const url = match[2]; // link URL
+                            const label = match[1];
+                            const url = match[2];
 
                             if (type === 'display') {
                                 return `<a href="${url}" target="_blank">${label}</a>`;
