@@ -112,6 +112,7 @@ a {
 #dt-search-0 {
     margin-left: 0;
     border-color: #3a1e3e;
+    width: 100%;
     &:focus {
         border-width: 1px;
         border-color: #ffe880;
@@ -376,5 +377,16 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
     #filterButton {
         border-top-right-radius: .25rem;
         border-bottom-right-radius: .25rem;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    #dt-search-0, .dt-buttons {
+        margin-bottom: .5rem;
+        flex-grow: 1;
+    }
+
+    .row>* {
+        flex-grow: 1;
     }
 }
