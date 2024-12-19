@@ -318,7 +318,7 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
 }
 
 .pagination-controls, .search-box {
-    display: inline-flex;
+    display: flex;
     flex-wrap: nowrap;
     align-items: center;
 }
@@ -332,8 +332,30 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
     }
 }
 
-div.dt-container .row {
-    --bs-gutter-y: 0;
+
+.collection-table {
+    border: hidden;
+  }
+
+table.dataTable.fixedHeader-floating,table.dataTable.fixedHeader-locked {
+    background-color: #ffe880;
+}
+
+.dt-scroll {
+    border: 6.5px solid #ffe880;
+    border-radius: .25rem;
+}
+
+.dt-scroll-head {
+    background-color: #ffe880;
+} 
+
+.dt-scroll-body {
+    border: none !important;
+}
+
+thead, tbody, th, td {
+    border: none !important;
 }
 
 /* Toggle Collection View for Small Screens */
@@ -393,7 +415,7 @@ div.dt-container .row {
         margin-bottom: .5rem;
     }
 
-    .row>* {
+    .row > :not(:has(.pagination)) {
         flex-grow: 1;
     }
 }

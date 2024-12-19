@@ -40,11 +40,10 @@
           ajax: { url: '{{ "/assets/js/metadata.min.json" | relative_url }}', dataSrc: 'objects' },
           // defer render to speed up large sets
           "deferRender": true,
-          // enable pagination
-          "paging": true,
-          // "lengthMenu": [[ 25, 50, 100, -1], [ 25, 50, 100, "∞"]],
           fixedHeader: true,
           autoWidth: false,
+          scrollX: true,
+          scrollCollapse: true,
 
           layout: {
             topStart: [
@@ -62,7 +61,7 @@
                 },
                 {
                   extend: 'colvis',
-                  columns: ':gt(0)',
+                  columns: ':not(:first,:last)',
                   className: 'btn btn-outline-primary'
                 },
                 ],
@@ -103,8 +102,15 @@
                       className: 'btn btn-outline-primary'
                   }
               ],
-              },
             },
+            bottomEnd: {
+              paging: {
+                firstLast: false,
+                previousNext: false,
+                buttons: 7
+              }
+            },
+          },
             
           // get the data from json
           columns: [ {% for i in (0..fcount) %}{ data: '{{ i }}' }{% unless forloop.last %},{% endunless %}{% endfor %} ],
