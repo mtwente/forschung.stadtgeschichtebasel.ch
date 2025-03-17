@@ -12,6 +12,8 @@ Die Stadt.Geschichte.Basel macht projektbezogene Daten in verschiedenen Formaten
 
 Wissenschaftliche Veröffentlichungen, die im Zusammenhang mit dem Forschungsprojekt stehen, sind [auf Zenodo archiviert](https://zenodo.org/communities/stadt-geschichte-basel){:target="\_blank"}. Die im Rahmen von Konferenzen und Workshops publizierten Beiträge des Teams für Forschungsdatenmanagement und Public History befassen sich mit der Entwicklung dieser Plattform und übergreifend mit (digitalem) Forschungsdatenmanagement und Public History in den Geschichtswissenschaften.
 
+Die Arbeit des Teams für Forschungsdatenmanagement und Public History an dieser Plattform und weiteren Produkten wird ausführlich auf [dokumentation.stadtgeschichtebasel.ch](https://dokumentation.stadtgeschichtebasel.ch) beschrieben.
+
 ## Datenmodell
 
 Metadaten für die auf der Forschungsdatenplattform vorgestellten Elemente werden gemäss einem Datenmodell bereitgestellt, das vom Team für Forschungdatenmanagement der Stadt.Geschichte.Basel entwickelt wurde, um den Anforderungen der vielfältigen im Projekt verwendeten Quellen gerecht zu werden. Das Datenmodell (und der anschliessende Annotationsprozess) folgen dem [Handbuch zur Erstellung diskriminerungsfreier Metadaten für historische Quellen und Forschungsdaten](https://maehr.github.io/diskriminierungsfreie-metadaten/), das ebenfalls von Stadt.Geschichte.Basel entwickelt wurde.
