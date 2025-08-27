@@ -41,7 +41,7 @@
 
                           if (rows.length > 0) {
                               build += "<thead><tr>";
-                              var headers = Object.keys(rows[0]);
+                              var headers = results.meta.fields;
                               headers.forEach(header => {
                                   build += "<th scope='col'>" + header + "</th>";
                               });
