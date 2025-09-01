@@ -20,16 +20,20 @@
   src="{{ '/assets/lib/papaparse/papaparse.min.js' | relative_url }}"
 ></script>
 <script type="text/javascript">
-    function esc(v) {
-        const s = v == null ? "" : String(v);
-        return s.replace(/[&<>"']/g, c => ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#39;'
-        }[c]));
-        }
+  function esc(v) {
+    const s = v == null ? '' : String(v);
+    return s.replace(
+      /[&<>"']/g,
+      (c) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[c],
+    );
+  }
 </script>
 
 <script type="text/javascript">
