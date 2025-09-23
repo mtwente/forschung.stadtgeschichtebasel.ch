@@ -13,11 +13,11 @@ In diesem Sinne dient die folgende Barrierefreiheitserklärung als Selbstverpfli
 
 Die Erklärung ist ausserdem eine Dokumentation der Schritte, die bereits im Bereich Barrierefreiheit umgesetzt wurden. Seit Beginn des Projektes wurde darauf geachtet, Webseite und Inhalte mit der Barrierefreiheitserklärung abzugleichen.
 
-Stadt.Geschichte.Basel ist bestrebt, das Portal kontinuierlich auf die Einhaltung der neuesten Standards zu prüfen und deren Umsetzung zu verbessern. Die Ergebnisse der Prüfungen werden im Abschnitt “aktueller Status” festgehalten. Das Team ist stets offen für Rückmeldungen und Anregungen.
+Stadt.Geschichte.Basel ist bestrebt, das Portal kontinuierlich auf die Einhaltung der neuesten Standards zu prüfen und deren Umsetzung zu verbessern. Die Ergebnisse der Prüfungen werden im Abschnitt [Aktueller Status](#aktueller-status) festgehalten. Das Team ist stets offen für Rückmeldungen und Anregungen.
 
 ## Geltungsbereich
 
-Diese Barrierefreiheitserklärung gilt als Selbstverpflichtung für die Forschungsdatenplattform von Stadt.Geschichte.Basel unter [https://forschung.stadtgeschichtebasel.ch](https://forschung.stadtgeschichtebasel.ch){:target="\_blank"}. Für die übrigen Angebote von Stadt.Geschichte.Basel gilt die Barrierefreiheitserklärung auf [https://stadtgeschichtebasel.ch](https://stadtgeschichtebasel.ch){:target="\_blank"}.
+Diese Barrierefreiheitserklärung gilt als Selbstverpflichtung für die Forschungsdatenplattform von Stadt.Geschichte.Basel unter [https://forschung.stadtgeschichtebasel.ch](https://forschung.stadtgeschichtebasel.ch){:target="\_blank rel="noopener noreferrer"}. Für die übrigen Angebote von Stadt.Geschichte.Basel gilt die Barrierefreiheitserklärung auf [https://stadtgeschichtebasel.ch](https://stadtgeschichtebasel.ch){:target="\_blank" rel="noopener noreferrer"}.
 
 ## Standards und Richtlinien
 
@@ -51,10 +51,10 @@ Die Forschungsdatenplattform basiert auf CollectionBuilder. Das CollectionBuilde
 
 CollectionBuilder und damit auch die Forschungsdatenplattform nutzt verschiedene Komponenten von Drittanbietern, die im Rahmen der Barrierefreiheit berücksichtigt werden müssen. Es handelt sich um Bootstrap und Bootstrap Icons für den Aufbau und die Gestaltung des Frontends, Leaflet für die interaktive Darstellung von Geodaten sowie DataTables für die Einbettung von tabellarischen Daten auf der Plattform. Probleme und Einschränkungen in diesen Projekten können sich auch auf CollectionBuilder-Websites auswirken. Wir bemühen uns, bei der Verwendung dieser Bibliotheken bewährte Verfahren und Richtlinien zu befolgen. Hier finden Sie Ressourcen zu den einzelnen Komponenten:
 
-- [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/accessibility/){:target="\_blank"}
-- [Bootstrap Icons](https://icons.getbootstrap.com/#accessibility){:target="\_blank"}
-- [Leaflet](https://leafletjs.com/examples/accessibility/){:target="\_blank"}
-- [DataTables](https://datatables.net/forums/discussion/comment/239997/#Comment_239997){:target="\_blank"}
+- [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/accessibility/){:target="\_blank" rel="noopener noreferrer"}
+- [Bootstrap Icons](https://icons.getbootstrap.com/#accessibility){:target="\_blank" rel="noopener noreferrer"}
+- [Leaflet](https://leafletjs.com/examples/accessibility/){:target="\_blank" rel="noopener noreferrer"}
+- [DataTables](https://datatables.net/forums/discussion/comment/239997/#Comment_239997){:target="\_blank" rel="noopener noreferrer"}
 
 ### Nicht barrierefreie Funktionen
 
