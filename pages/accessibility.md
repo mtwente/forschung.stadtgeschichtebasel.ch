@@ -23,7 +23,7 @@ Diese Barrierefreiheitserklärung gilt als Selbstverpflichtung für die Forschun
 
 Stadt.Geschichte.Basel arbeitet aktiv daran, die international anerkannten Richtlinien für barrierefreie Webinhalte (Web Content Accessibility Guidelines, WCAG 2.1) umzusetzen und die relevanten Erfolgskriterien zu erfüllen. Die von der Web Accessibility Initiative des World Wide Web Consortiums (W3C) erarbeiteten WCAG-Richtlinien umfassen als Grundlagen für uneingeschränkten Zugang und Nutzung einer Website die vier Grundprinzipien Wahrnehmbar, Bedienbar, Verständlich und Robust.
 
-### Warnehmbar (perceivable)
+### Wahrnehmbar (perceivable)
 
 Dieses Grundprinzip garantiert den Umstand, dass Informationen und Komponenten der Benutzeroberfläche so dargestellt werden, dass sie wahrnehmbar sind. Beispielsweise reichen Bildbeschreibungen eines Bildes nicht aus, um vollständig sichtbar für alle Nutzer\*innen zu sein. Es ist daher zentral, jeweils neben den Bildunterschriften auch passende Alternativtexte zu schreiben, um für den Screenreader erkennbar zu sein.
 
