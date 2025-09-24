@@ -11,7 +11,7 @@ credits: true
 
 Die Stiftung Stadt.Geschichte.Basel legt grössten Wert auf den Schutz personenbezogener Daten. Personenbezogene Daten sind alle Daten, die auf Sie persönlich beziehbar sind, zum Beispiel Name, Adresse, E-Mail, Telefonnummer, Foto, Nutzerverhalten, IP-Adresse, etc.
 
-Mit dieser Datenschutzerklärung möchten wir Sie darüber informieren, welche Daten die Stiftung Stadt.Geschichte.Basel von Ihnen als Nutzerinnen und Nutzern den Webseite [https://stadtgeschichtebasel.ch](https://stadtgeschichtebasel.ch/), [https://forschung.stadtgeschichtebasel.ch](https://forschung.stadtgeschichtebasel.ch/) und [https://dokumentation.stadtgeschichtebasel.ch](https://dokumentation.stadtgeschichtebasel.ch/) zu welchem Zweck erhebt, bearbeitet, bekannt gibt und welche Massnahmen die Stiftung Stadt.Geschichte.Basel ergreift, um die Sicherheit dieser Daten zu gewährleisten. Zudem klären wir Sie mittels dieser Datenschutzerklärung über die Ihnen zustehenden Rechte auf.
+Mit dieser Datenschutzerklärung möchten wir Sie darüber informieren, welche Daten die Stiftung Stadt.Geschichte.Basel von Ihnen als Nutzerinnen und Nutzern der Webseiten [https://stadtgeschichtebasel.ch](https://stadtgeschichtebasel.ch/), [https://forschung.stadtgeschichtebasel.ch](https://forschung.stadtgeschichtebasel.ch/) und [https://dokumentation.stadtgeschichtebasel.ch](https://dokumentation.stadtgeschichtebasel.ch/) zu welchem Zweck erhebt, bearbeitet, bekannt gibt und welche Massnahmen die Stiftung Stadt.Geschichte.Basel ergreift, um die Sicherheit dieser Daten zu gewährleisten. Zudem klären wir Sie mittels dieser Datenschutzerklärung über die Ihnen zustehenden Rechte auf.
 
 ## Auf welcher gesetzlichen Grundlage bearbeitet die Stiftung Stadt.Geschichte.Basel personenbezogene Daten?
 
@@ -84,7 +84,7 @@ Wir binden Dienste von Dritten ein, achten dabei auf die Grundsätze des Datensc
 - Zweck: Darstellung einer interaktiven Karte
 - URL: [https://www.swisstopo.admin.ch/](https://www.swisstopo.admin.ch/)
 - Datenschutzerklärung: [https://www.swisstopo.admin.ch/de/rechtliches](https://www.swisstopo.admin.ch/de/rechtliches)
-- Allgemeine Nutzungsbdingungen: [https://www.geo.admin.ch/de/allgemeine-nutzungsbedingungen-bgdi/](https://www.geo.admin.ch/de/allgemeine-nutzungsbedingungen-bgdi/)
+- Allgemeine Nutzungsbedingungen: [https://www.geo.admin.ch/de/allgemeine-nutzungsbedingungen-bgdi/](https://www.geo.admin.ch/de/allgemeine-nutzungsbedingungen-bgdi/)
 
 ### Vimeo
 
@@ -113,7 +113,7 @@ Die Stiftung Stadt.Geschichte.Basel hat Webseiten, die auf den Webseiten [https:
 
 ## Welche Rechte stehen Ihnen als betroffene Person zu?
 
-Nutzerinnen und Nutzer den Webseiten [https://stadtgeschichtebasel.ch](https://stadtgeschichtebasel.ch/), [https://forschung.stadtgeschichtebasel.ch](https://forschung.stadtgeschichtebasel.ch/) und [https://dokumentation.stadtgeschichtebasel.ch](https://dokumentation.stadtgeschichtebasel.ch/), über die wir personenbezogene Daten bearbeiten, haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht
+Nutzerinnen und Nutzer der Webseiten [https://stadtgeschichtebasel.ch](https://stadtgeschichtebasel.ch/), [https://forschung.stadtgeschichtebasel.ch](https://forschung.stadtgeschichtebasel.ch/) und [https://dokumentation.stadtgeschichtebasel.ch](https://dokumentation.stadtgeschichtebasel.ch/), über die wir personenbezogene Daten bearbeiten, haben im Rahmen der geltenden gesetzlichen Bestimmungen jederzeit das Recht
 
 - auf unentgeltliche Bestätigung, ob personenbezogene Daten durch die Stiftung Stadt.Geschichte.Basel bearbeitet werden (§25 und §26 IDG),
 - auf Auskunft über allfällig gespeicherte Daten, auf Einschränkung der Bearbeitung der Daten,
@@ -125,7 +125,7 @@ Diesbezüglich können Sie sich jederzeit an unsere Kontaktadresse wenden: Morit
 
 ## Kann sich die Datenschutzerklärung ändern?
 
-Die Stiftung Stadt.Geschichte.Basel behält sich vor, diese Datenschutzerklärung jederzeit bei Bedarf anzupassen. Aktueller Stand der vorliegenden Datenschutzerklärung ist der 31. August 2023
+Die Stiftung Stadt.Geschichte.Basel behält sich vor, diese Datenschutzerklärung jederzeit bei Bedarf anzupassen. Aktueller Stand der vorliegenden Datenschutzerklärung ist der 31. August 2023.
 
 ## Verantwortlich
 
