@@ -363,6 +363,7 @@ table.dataTable.fixedHeader-floating,table.dataTable.fixedHeader-locked {
 
 .dt-scroll {
     border: 6.5px solid #ffe880;
+    margin-left: auto !important;
     border-radius: .25rem;
 }
 
@@ -373,6 +374,7 @@ table.dataTable.fixedHeader-floating,table.dataTable.fixedHeader-locked {
 .dt-scroll-body {
     border: none !important;
     background-color: #fff;
+    border-radius: .25rem;
 }
 
 thead, tbody, th {
