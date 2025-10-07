@@ -106,15 +106,15 @@
                                   order: [[ 0, "asc" ]],
                               });
                           } else {
-                              console.error('No data found or data format is incorrect for {{ obj_url }}.');
+                              console.error('No data found or data format is incorrect for {{ table_id }}.');
                           }
                       },
                       error: function(error) {
-                          console.error('Error parsing CSV for {{ obj_url }}:', error);
+                          console.error('Error parsing CSV for {{ table_id }}:', error);
                       }
                   });
               })
-              .catch(error => console.error('Error fetching data for {{ obj_url }}:', error));
+              .catch(error => console.error('Error fetching data for {{ table_id }}:', error));
       }
   })();
 </script>
