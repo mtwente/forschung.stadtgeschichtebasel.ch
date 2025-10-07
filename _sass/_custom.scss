@@ -268,10 +268,6 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
     overflow-x: hidden;
 }
 
-#csvTable {
-    background-color: white;
-}
-
 .dataTables_scrollFoot {
     position: sticky;
     bottom: 0;
@@ -359,7 +355,7 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
 
 .collection-table {
     border: hidden;
-  }
+}
 
 table.dataTable.fixedHeader-floating,table.dataTable.fixedHeader-locked {
     background-color: #ffe880;
@@ -376,10 +372,20 @@ table.dataTable.fixedHeader-floating,table.dataTable.fixedHeader-locked {
 
 .dt-scroll-body {
     border: none !important;
+    background-color: #fff;
 }
 
-thead, tbody, th, td {
+thead, tbody, th {
     border: none !important;
+}
+
+.table td {
+    border-right: 1px solid #ccc;
+    border-bottom: none;
+}
+
+table td:last-child {
+    border-right: none;
 }
 
 /* Toggle Collection View for Small Screens */
