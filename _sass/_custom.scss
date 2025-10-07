@@ -249,14 +249,14 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
     white-space: nowrap;
   }  
 
-#wrap {
+[id^="wrap-"] {
     max-height: 600px; 
     overflow-y: auto;
     text-align: left;
     background-color: #ffe880;
 }
 
-#wrap .table {
+[id^="wrap-"] .table {
     border-collapse: separate;
 }
 
@@ -264,7 +264,7 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria input.dtsb-value {
     overflow-x: auto;
 }
 
-.table-responsive-md, #csvTable_wrapper {
+.table-responsive-md, [id^="csvTable-"][id$="_wrapper"] {
     overflow-x: hidden;
 }
 
