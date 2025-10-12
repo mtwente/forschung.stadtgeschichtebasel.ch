@@ -1,10 +1,22 @@
 ---
-title: Datendokumentation
+title: Daten
 layout: page
 permalink: /data.html
 ---
 
-# Datendokumentation
+# Daten
+
+<div>{% include data-download-cards.html %}</div>
+
+## Datenmodell
+
+Metadaten für die auf der Forschungsdatenplattform vorgestellten Elemente werden gemäss einem Datenmodell bereitgestellt, das vom Team für Forschungdatenmanagement der Stadt.Geschichte.Basel entwickelt wurde, um den Anforderungen der vielfältigen im Projekt verwendeten Quellen gerecht zu werden. Das Datenmodell (und der anschliessende Annotationsprozess) folgen dem [Handbuch zur Erstellung diskriminerungsfreier Metadaten für historische Quellen und Forschungsdaten](https://maehr.github.io/diskriminierungsfreie-metadaten/){:target="\_blank"}, das ebenfalls von Stadt.Geschichte.Basel entwickelt wurde.
+
+Die folgende Grafik veranschaulicht das Datenmodell mit Metadatenfeldern für ein Beispiel-Metadatenobjekt `abb01313`, das ein untergeordnetes Medienobjekt `m01313` hat. Wenn ein Metadatenobjekt mehr als ein untergeordnetes Medienobjekt hat, werden die `id`-Nummern der untergeordneten Objekte fortlaufend nummeriert: `m01313_1`, `m01313_2` usw.
+
+![Datenmodell](assets/img/sgb_datamodel.svg){:style="max-width: 70%; display: block; margin: auto;"}
+
+## Datendokumentation
 
 Die Stadt.Geschichte.Basel macht projektbezogene Daten in verschiedenen Formaten zugänglich. Verfügbar sind wissenschaftliche Publikationen mit Projektbezug einerseits, sowie die Metadaten zu den auf dieser Plattform bereitgestellten Quellen und historischen Forschungsdaten andererseits.
 
@@ -15,14 +27,6 @@ Die Arbeit des Teams für Forschungsdatenmanagement und Public History an dieser
 [![Screenshot der Dokumentationswebsite](assets/img/screenshots/dokumentation.png){:style="max-width: 50%; display: block; margin: auto;"}](https://dokumentation.stadtgeschichtebasel.ch){:target="\_blank"}
 
 Wissenschaftliche Veröffentlichungen, die im Zusammenhang mit dem Forschungsprojekt stehen, sind auch [auf Zenodo archiviert](https://zenodo.org/communities/stadt-geschichte-basel){:target="\_blank"}. Die im Rahmen von Konferenzen und Workshops publizierten Beiträge des Teams für Forschungsdatenmanagement und Public History befassen sich mit der Entwicklung dieser Plattform und übergreifend mit (digitalem) Forschungsdatenmanagement und Public History in den Geschichtswissenschaften.
-
-## Datenmodell
-
-Metadaten für die auf der Forschungsdatenplattform vorgestellten Elemente werden gemäss einem Datenmodell bereitgestellt, das vom Team für Forschungdatenmanagement der Stadt.Geschichte.Basel entwickelt wurde, um den Anforderungen der vielfältigen im Projekt verwendeten Quellen gerecht zu werden. Das Datenmodell (und der anschliessende Annotationsprozess) folgen dem [Handbuch zur Erstellung diskriminerungsfreier Metadaten für historische Quellen und Forschungsdaten](https://maehr.github.io/diskriminierungsfreie-metadaten/){:target="\_blank"}, das ebenfalls von Stadt.Geschichte.Basel entwickelt wurde.
-
-Die folgende Grafik veranschaulicht das Datenmodell mit Metadatenfeldern für ein Beispiel-Metadatenobjekt `abb01313`, das ein untergeordnetes Medienobjekt `m01313` hat. Wenn ein Metadatenobjekt mehr als ein untergeordnetes Medienobjekt hat, werden die `id`-Nummern der untergeordneten Objekte fortlaufend nummeriert: `m01313_1`, `m01313_2` usw.
-
-![Datenmodell](assets/img/sgb_datamodel.svg){:style="max-width: 70%; display: block; margin: auto;"}
 
 ## EDTF
 
@@ -66,3 +70,127 @@ Das [Extended Date Time Format (EDTF)](https://www.loc.gov/standards/datetime/){
    - `Y-30000` für 30'000 Jahre vor unserer Zeitrechnung.
 
 **Zusammengefasst**: EDTF bietet weit mehr Möglichkeiten als die Verwendung eines einfachen Kalenderdatums. Es erlaubt die Erfassung von Unsicherheiten, Unschärfen, komplexen Zeiträumen und offenen Enden, sowie die Angabe von Mengen, Intervallen oder wiederkehrenden Mustern. Das bedeutet im Kern: Wo man bislang nur ein genaues Datum hatte, lassen sich dank EDTF auch „ungefähr“, „nicht genau bekannt“, „innerhalb eines Jahrzehnts“, „irgendwann zwischen X und Y“ oder „eine von mehreren Möglichkeiten“ in einem einheitlichen, standardisierten Format darstellen. Diese Flexibilität macht EDTF für historische, bibliothekarische, archivische oder wissenschaftliche Projekte besonders nützlich.
+
+<script type="application/ld+json">
+  {
+      "@context":"https://schema.org/",
+      "@type":"Dataset",
+      "name":"{{ site.title | escape }} Data",
+      "description":"Metadata and data derived from {{ site.title | escape }}. {{ site.description | escape }}",
+      {% if site.keywords %}"keywords": {% assign keywords = site.keywords | split: ';' %} {{ keywords | jsonify }},{% endif %}
+      "url":"{{ page.url | absolute_url }}",
+      "license" : "https://creativecommons.org/publicdomain/zero/1.0/",
+      "creator": [
+          {
+              "@type": "Organization",
+              "sameAs": "{{ site.organization-link }}",
+              "name": "{{ site.organization-name | escape }}"
+          }
+      ],
+      "hasPart" : [
+          {% if site.data.theme.metadata-facets-fields %}
+          {
+              "@type": "Dataset",
+              "name": "{{ site.title | escape }} Metadata Facets",
+              "description": "Unique values and counts of metadata facet fields.",
+              "license" : "https://creativecommons.org/publicdomain/zero/1.0/",
+              "distribution":[
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"JSON",
+                      "contentUrl":"{{ '/assets/data/facets.json' | absolute_url }}"
+                  }
+              ]
+          },
+          {%- endif -%}
+          {% if stubs contains "subject" %}
+          {
+              "@type": "Dataset",
+              "name": "{{ site.title | escape }} metadata subject counts",
+              "description": "Unique values and counts of metadata subject fields.",
+              "license" : "https://creativecommons.org/publicdomain/zero/1.0/",
+              "distribution":[
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"CSV",
+                      "contentUrl":"{{ '/assets/data/subjects.csv' | absolute_url }}"
+                  },
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"JSON",
+                      "contentUrl":"{{ '/assets/data/subjects.json' | absolute_url }}"
+                  }
+              ]
+          },
+          {%- endif -%}
+          {% if stubs contains "location" %}
+          {
+              "@type": "Dataset",
+              "name": "{{ site.title | escape }} metadata location counts",
+              "description": "Unique values and counts of metadata location fields.",
+              "license" : "https://creativecommons.org/publicdomain/zero/1.0/",
+              "distribution":[
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"CSV",
+                      "contentUrl":"{{ '/assets/data/locations.csv' | absolute_url }}"
+                  },
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"JSON",
+                      "contentUrl":"{{ '/assets/data/locations.json' | absolute_url }}"
+                  }
+              ]
+          },
+          {%- endif -%}
+          {% if stubs contains "map" %}
+          {
+              "@type": "Dataset",
+              "name": "{{ site.title | escape }} geographic metadata",
+              "description": "Geojson data containing all objects with lat-longs and associated descriptive metadata.",
+              "license" : "https://creativecommons.org/publicdomain/zero/1.0/",
+              "distribution":[
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"JSON",
+                      "contentUrl":"{{ '/assets/data/geodata.json' | absolute_url }}"
+                  }
+              ]
+          },
+          {%- endif -%}
+          {% if stubs contains "timeline" %}
+          {
+              "@type": "Dataset",
+              "name": "{{ site.title | escape }} timeline metadata",
+              "description": "Time-based metadata formatted for TimelineJS or other applications.",
+              "license" : "https://creativecommons.org/publicdomain/zero/1.0/",
+              "distribution":[
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"JSON",
+                      "contentUrl":"{{ '/assets/data/timelinejs.json' | absolute_url }}"
+                  }
+              ]
+          },
+          {%- endif -%}
+          {
+              "@type": "Dataset",
+              "name": "{{ site.title | escape }} full metadata",
+              "description": "Complete metadata export for {{ site.title | escape }} objects.",
+              "license" : "https://creativecommons.org/publicdomain/zero/1.0/",
+              "distribution":[
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"CSV",
+                      "contentUrl":"{{ '/assets/data/metadata.csv' | absolute_url }}"
+                  },
+                  {
+                      "@type":"DataDownload",
+                      "encodingFormat":"JSON",
+                      "contentUrl":"{{ '/assets/data/metadata.json' | absolute_url }}"
+                  }
+              ]
+          }
+      ]
+  }
+</script>
