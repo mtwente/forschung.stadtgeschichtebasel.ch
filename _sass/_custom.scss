@@ -464,14 +464,14 @@ table td:last-child {
         border-bottom-right-radius: .25rem;
     }
 
-    .btngroup-download-child, #btngroup-download-compound {
+    .btngroup-download-child, .btngroup-download-compound {
         flex-direction: column;
         display: flex;
         margin-left: 2.5%;
         margin-right: 2.5%;
     }
 
-    .btngroup-download-child .btn, #btngroup-download-compound .btn {
+    .btngroup-download-child .btn, .btngroup-download-compound .btn {
         justify-content: center;
     }
 
