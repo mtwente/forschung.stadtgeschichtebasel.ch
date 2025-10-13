@@ -421,7 +421,7 @@ table td:last-child {
         border-bottom-right-radius: .25rem;
     }
 
-    #btngroup-download-child {
+    .btngroup-download-child {
         margin-left: 2.5%;
         margin-right: 2.5%;
     }
@@ -464,33 +464,33 @@ table td:last-child {
         border-bottom-right-radius: .25rem;
     }
 
-    #btngroup-download-child, #btngroup-download-compound {
+    .btngroup-download-child, #btngroup-download-compound {
         flex-direction: column;
         display: flex;
         margin-left: 2.5%;
         margin-right: 2.5%;
     }
 
-    #btngroup-download-child .btn, #btngroup-download-compound .btn {
+    .btngroup-download-child .btn, #btngroup-download-compound .btn {
         justify-content: center;
     }
 
-    #btngroup-download-child .btn:first-child {
-        border-top-left-radius: .25rem;
-        border-top-right-radius: .25rem;
-        border-bottom-left-radius: 0;
-        margin-left: -1px;
+    .btngroup-download-child .btn {
+        justify-content: center;
+        border-radius: 0; /* Reset all radii first */
     }
 
-    #btngroup-download-child > .btn:not(:first-child) {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+    .btngroup-download-child > .btn:not(:first-child) {
         margin-top: -1px;
     }
 
-    #btngroup-download-child .btn:last-child {
+    .btn-group.btngroup-download-child > .btn:first-child {
+        border-top-left-radius: .25rem;
+        border-top-right-radius: .25rem;
+        margin-left: -1px;
+    }
+
+    .btngroup-download-child > .btn:last-child {
         border-bottom-left-radius: .25rem;
         border-bottom-right-radius: .25rem;
     }
