@@ -1,12 +1,13 @@
 import json
 import logging
 import os
+import re
 import unicodedata
 from typing import Any, TypeAlias, cast
-from urllib.parse import urljoin, urlparse
+from urllib.parse import parse_qsl, urlencode, urljoin, urlparse, urlunparse
 
+import httpx2
 import pandas as pd
-import requests
 
 JsonObject: TypeAlias = dict[str, Any]
 Record: TypeAlias = dict[str, Any]
@@ -23,7 +24,7 @@ def require_env(name: str) -> str:
 
 
 # Configuration
-OMEKA_API_URL = require_env("OMEKA_API_URL")
+OMEKA_API_URL = f"{require_env('OMEKA_API_URL').rstrip('/')}/"
 KEY_IDENTITY = require_env("KEY_IDENTITY")
 KEY_CREDENTIAL = require_env("KEY_CREDENTIAL")
 ITEM_SET_ID_RAW = require_env("ITEM_SET_ID")
@@ -33,6 +34,18 @@ except ValueError:
     raise ValueError("ITEM_SET_ID must be a valid integer") from None
 CSV_PATH = os.getenv("CSV_PATH", "_data/sgb-metadata-csv.csv")
 JSON_PATH = os.getenv("JSON_PATH", "_data/sgb-metadata-json.json")
+VALIDATION_REPORT_PATH = os.getenv("VALIDATION_REPORT_PATH")
+FAIL_ON_LITERAL_URLS = os.getenv("FAIL_ON_LITERAL_URLS", "").lower() in {
+    "1",
+    "true",
+    "yes",
+}
+PLACEHOLDER_IMAGE_PATHS = {
+    "assets/img/no-image.svg",
+    "assets/img/placeholder.svg",
+}
+PLACEHOLDER_SOURCE_MARKER = "platzhalter"
+URL_IN_LITERAL_PATTERN = re.compile(r"\b(?:https?://|www\.)\S+", re.IGNORECASE)
 
 # Set up logging
 logging.basicConfig(
@@ -50,19 +63,41 @@ def is_valid_url(url: str) -> bool:
         return False
 
 
-def download_file(url: str, dest_path: str) -> None:
-    """Downloads a file from a given URL to the specified destination path."""
+def redact_url(url: str) -> str:
+    """Redacts Omeka API credentials from URLs before logging or raising errors."""
+    parsed_url = urlparse(url)
+    query = urlencode(
+        [
+            (
+                key,
+                "[redacted]" if key in {"key_identity", "key_credential"} else value,
+            )
+            for key, value in parse_qsl(parsed_url.query, keep_blank_values=True)
+        ]
+    )
+    return urlunparse(parsed_url._replace(query=query))
+
+
+def download_file(url: str, dest_path: str, retries: int = 3) -> None:
+    """Downloads a file from a URL to dest_path, retrying transient errors."""
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
-    try:
-        # Add timeout for file downloads as well
-        with requests.get(url, stream=True, timeout=30) as r:
-            r.raise_for_status()
-            with open(dest_path, "wb") as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
-    except requests.exceptions.RequestException as err:
-        logging.error(f"File download error: {err}")
-        raise
+    for attempt in range(1, retries + 1):
+        try:
+            with httpx2.stream("GET", url, timeout=30, follow_redirects=True) as r:
+                r.raise_for_status()
+                with open(dest_path, "wb") as f:
+                    for chunk in r.iter_bytes(8192):
+                        f.write(chunk)
+            return
+        except httpx2.HTTPError as err:
+            # ponytail: small fixed retry loop for transient errors, no backoff lib
+            logging.error(
+                "File download error (attempt %d/%d): %s", attempt, retries, err
+            )
+            if os.path.exists(dest_path):
+                os.remove(dest_path)  # drop any partial write before retry/skip
+            if attempt == retries:
+                raise
 
 
 def get_paginated_items(
@@ -73,12 +108,13 @@ def get_paginated_items(
     while url:
         try:
             # Add timeout to prevent hanging on slow/unresponsive servers
-            response = requests.get(url, params=params, timeout=30)
+            response = httpx2.get(url, params=params, timeout=30, follow_redirects=True)
             response.raise_for_status()
             items.extend(cast(list[JsonObject], response.json()))
-        except (requests.exceptions.RequestException, json.JSONDecodeError) as err:
-            logging.exception(f"Error fetching items from {url}: {err}")
-            raise
+        except (httpx2.HTTPError, json.JSONDecodeError):
+            safe_url = redact_url(url)
+            logging.exception("Error fetching items from %s", safe_url)
+            raise RuntimeError(f"Error fetching items from {safe_url}") from None
         next_url = response.links.get("next", {}).get("url")
         url = next_url if isinstance(next_url, str) else None
         params = None
@@ -99,10 +135,15 @@ def get_items_from_collection(collection_id: int) -> list[JsonObject]:
 
 def get_media(item_id: int | str) -> list[JsonObject]:
     """Fetches media associated with a specific item ID."""
-    params = {"key_identity": KEY_IDENTITY, "key_credential": KEY_CREDENTIAL}
-    return get_paginated_items(
-        urljoin(OMEKA_API_URL, f"media?item_id={item_id}"), params
-    )
+    # item_id must go in params, not the URL query: httpx2 replaces an existing
+    # query string when params is passed (requests merged it), which would drop
+    # the filter and fetch every media object on the server.
+    params = {
+        "item_id": item_id,
+        "key_identity": KEY_IDENTITY,
+        "key_credential": KEY_CREDENTIAL,
+    }
+    return get_paginated_items(urljoin(OMEKA_API_URL, "media"), params)
 
 
 # --- Data Extraction and Transformation Functions ---
@@ -165,15 +206,160 @@ def extract_combined_values_csv(props: list[JsonObject]) -> str:
     return ";".join(combined)
 
 
+def truncate_for_report(value: str, max_length: int = 90) -> str:
+    """Normalizes and truncates a value for concise validation logs."""
+    value = " ".join(value.split())
+    if len(value) <= max_length:
+        return value
+    return f"{value[: max_length - 3]}..."
+
+
+def find_literal_url_issues(resource: JsonObject, resource_type: str) -> list[str]:
+    """Finds Omeka literal values that contain URLs and should be URI values."""
+    issues = []
+    resource_id = resource.get("o:id", "unknown")
+    for term, props in resource.items():
+        if not isinstance(props, list):
+            continue
+        for index, prop in enumerate(props):
+            if not isinstance(prop, dict):
+                continue
+            value = prop.get("@value")
+            if isinstance(value, str) and URL_IN_LITERAL_PATTERN.search(value):
+                issues.append(
+                    f"[{resource_type} {resource_id}] {term}[{index}]: "
+                    f"Literal field contains URL: {truncate_for_report(value)}"
+                )
+    return issues
+
+
+def report_literal_url_issues(issues: list[str]) -> None:
+    """Logs literal URL validation issues and optionally writes a report file."""
+    if not issues:
+        # Clear a stale report from a previous run so downstream cleanup doesn't
+        # act on outdated data.
+        if VALIDATION_REPORT_PATH and os.path.exists(VALIDATION_REPORT_PATH):
+            os.remove(VALIDATION_REPORT_PATH)
+        return
+
+    logging.warning(
+        "%s literal metadata value(s) contain URLs. "
+        "Move URLs into Omeka URI values with labels to avoid broken rendering.",
+        len(issues),
+    )
+    for issue in issues:
+        logging.warning(issue)
+
+    if VALIDATION_REPORT_PATH:
+        report_dir = os.path.dirname(VALIDATION_REPORT_PATH)
+        if report_dir:
+            os.makedirs(report_dir, exist_ok=True)
+        with open(VALIDATION_REPORT_PATH, "w", encoding="utf-8") as f:
+            f.write("\n".join(issues))
+            f.write("\n")
+        logging.warning("Validation report saved to %s", VALIDATION_REPORT_PATH)
+
+    if FAIL_ON_LITERAL_URLS:
+        raise ValueError(
+            f"Found {len(issues)} literal metadata value(s) containing URLs"
+        )
+
+
 def download_thumbnail(image_url: str) -> str:
     """Downloads the thumbnail image if the URL is valid."""
     if image_url and is_valid_url(image_url):
         filename = os.path.basename(image_url)
         local_image_path = f"objects/{filename}"
         if not os.path.exists(local_image_path):
-            download_file(image_url, local_image_path)
+            try:
+                download_file(image_url, local_image_path)
+            except httpx2.HTTPError as err:
+                # A single unreachable file must not abort the whole export.
+                logging.warning("Skipping thumbnail %s: %s", redact_url(image_url), err)
+                return ""
         return local_image_path
     return ""
+
+
+def has_meaningful_preview(image_path: object) -> bool:
+    """Returns whether an image path points to a non-placeholder preview."""
+    return (
+        isinstance(image_path, str)
+        and bool(image_path)
+        and image_path not in PLACEHOLDER_IMAGE_PATHS
+    )
+
+
+def normalize_objectid(objectid: object, prefix: str, source_id: object) -> str:
+    """Returns a stable object identifier with a fallback for missing values."""
+    normalized_objectid = str(objectid or "").strip()
+    return normalized_objectid or f"{prefix}{source_id}"
+
+
+def ensure_unique_objectid(
+    objectid: str, used_objectids: set[str], suffix: object
+) -> str:
+    """Ensures that each exported record has a unique object identifier."""
+    if objectid not in used_objectids:
+        used_objectids.add(objectid)
+        return objectid
+
+    candidate = f"{objectid}_{suffix}"
+    counter = 2
+    while candidate in used_objectids:
+        candidate = f"{objectid}_{suffix}_{counter}"
+        counter += 1
+
+    logging.warning(
+        "Duplicate objectid '%s' detected. Exporting record as '%s'.",
+        objectid,
+        candidate,
+    )
+    used_objectids.add(candidate)
+    return candidate
+
+
+def apply_media_preview(item_record: Record, media_records: list[Record]) -> Record:
+    """Uses the first meaningful child preview for a parent item when needed."""
+    if has_meaningful_preview(item_record.get("image_thumb")) or has_meaningful_preview(
+        item_record.get("image_small")
+    ):
+        return item_record
+
+    def find_first_valid_preview_record(records: list[Record]) -> Record | None:
+        for media_record in records:
+            media_preview = media_record.get("image_thumb") or media_record.get(
+                "image_small"
+            )
+            if has_meaningful_preview(media_preview):
+                return media_record
+        return None
+
+    image_media_records = []
+    for media_record in media_records:
+        format_value = media_record.get("format", "")
+        format_text = format_value if isinstance(format_value, str) else ""
+        if media_record.get(
+            "display_template"
+        ) == "image" or format_text.lower().startswith("image/"):
+            image_media_records.append(media_record)
+
+    preview_record = find_first_valid_preview_record(
+        image_media_records
+    ) or find_first_valid_preview_record(media_records)
+    if not preview_record:
+        return item_record
+
+    item_record["image_thumb"] = preview_record.get(
+        "image_thumb"
+    ) or preview_record.get("image_small")
+    item_record["image_small"] = preview_record.get(
+        "image_small"
+    ) or preview_record.get("image_thumb")
+    if preview_record.get("image_alt_text"):
+        item_record["image_alt_text"] = preview_record["image_alt_text"]
+
+    return item_record
 
 
 def infer_display_template(format_value: str) -> str:
@@ -227,19 +413,32 @@ def extract_media_data(media: JsonObject, item_dc_identifier: str) -> Record:
     """Extracts relevant data from a media item associated with a specific item."""
     format_value = extract_property(media.get("dcterms:format", []), 9)
     display_template = infer_display_template(format_value)
+    media_source = str(media.get("o:source", "")).lower()
 
     # Download the thumbnail image if available and valid
-    if "platzhalter" in media.get("o:source", ""):
-        local_image_path = "assets/img/placeholder.svg"
-    elif "application/geo+json" in format_value:
+    if "application/geo+json" in format_value:
         local_image_path = "assets/lib/icons/sgb-globe.svg"
     elif "text/csv" in format_value:
         local_image_path = "assets/lib/icons/table.svg"
     else:
-        local_image_path = (
-            download_thumbnail(media.get("thumbnail_display_urls", {}).get("large", ""))
-            or "assets/img/no-image.svg"
+        local_image_path = download_thumbnail(
+            media.get("thumbnail_display_urls", {}).get("large", "")
         )
+        original_url = media.get("o:original_url", "")
+        if (
+            not local_image_path
+            and media.get("o:is_public", False)
+            and isinstance(original_url, str)
+            and format_value.lower().startswith("image/")
+            and is_valid_url(original_url)
+        ):
+            local_image_path = original_url
+        if not local_image_path:
+            local_image_path = (
+                "assets/img/placeholder.svg"
+                if PLACEHOLDER_SOURCE_MARKER in media_source
+                else "assets/img/no-image.svg"
+            )
 
     # Extract media data
     object_location = (
@@ -302,15 +501,48 @@ def main() -> None:
 
     # Process each item and associated media
     items_processed = []
+    literal_url_issues = []
+    seen_parent_objectids: set[str] = set()
+    used_objectids: set[str] = set()
     for item in items_data:
         item_record = extract_item_data(item)
-        items_processed.append(item_record)
+        item_record["objectid"] = normalize_objectid(
+            item_record.get("objectid"), "item-", item.get("o:id", "unknown")
+        )
+        item_objectid = item_record["objectid"]
+        if item_objectid in seen_parent_objectids:
+            logging.warning(
+                "Skipping duplicate parent objectid '%s' from Omeka item %s.",
+                item_objectid,
+                item.get("o:id", "unknown"),
+            )
+            continue
+
+        literal_url_issues.extend(find_literal_url_issues(item, "Item"))
+        seen_parent_objectids.add(item_objectid)
+        used_objectids.add(item_objectid)
         media_data = get_media(item.get("o:id", ""))
+        media_records = []
         if media_data:
             for media in media_data:
-                items_processed.append(
-                    extract_media_data(media, item_record["objectid"])
+                literal_url_issues.extend(find_literal_url_issues(media, "Media"))
+                media_record = extract_media_data(media, item_objectid)
+                media_record["objectid"] = ensure_unique_objectid(
+                    normalize_objectid(
+                        media_record.get("objectid"),
+                        "media-",
+                        media.get("o:id", "unknown"),
+                    ),
+                    used_objectids,
+                    media.get("o:id", "unknown"),
                 )
+                media_records.append(media_record)
+
+        item_record = apply_media_preview(item_record, media_records)
+        items_processed.append(item_record)
+        items_processed.extend(media_records)
+
+    report_literal_url_issues(literal_url_issues)
 
     # Normalize all string fields in the records to avoid decomposed Unicode form Umlaute ¨ + o -> ö
     items_normalized = [normalize_record(record) for record in items_processed]
